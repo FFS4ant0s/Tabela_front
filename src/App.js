@@ -31,19 +31,37 @@ function App() {
 
   // Cadastrar produto
   const cadastrar = () => {
+    // Verifica se todos os campos obrigatórios estão preenchidos
+    if (!objProduto.nome || !objProduto.marca) {
+      alert('Por favor, preencha todos os campos!');
+      return; // Não faz a requisição se algum campo estiver vazio
+    }
+
     fetch('http://localhost:8080/cadastrar', {
-      method: 'post',
+      method: 'POST',
       body: JSON.stringify(objProduto),
       headers: {
-        'Content-type': "application/json",
-        'Accept': 'application/json'
-      }
+        'Content-type': 'application/json',
+        'Accept': 'application/json',
+      },
     })
-      .then(retorno => retorno.json())
-      .then(retorno_convertido => {
-        console.log(retorno_convertido);
+      .then((retorno) => retorno.json())
+      .then((retorno_convertido) => {
+        // Verifica se a resposta contém uma mensagem de erro
+        if (retorno_convertido.mensagem) {
+          alert(retorno_convertido.mensagem);
+        } else {
+          setProdutos((prevProdutos) => [...prevProdutos, retorno_convertido]);
+          alert('Produto cadastrado com sucesso!');
+        }
       })
-  }
+      .catch((error) => {
+        console.error('Erro ao cadastrar produto:', error);
+        alert('Houve um erro ao cadastrar o produto.');
+      });
+  };
+
+
 
   // Retorno
   return (
