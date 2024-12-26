@@ -67,13 +67,18 @@ function App() {
     setObjProduto(produto);
   }
 
+  // Selecionar produto
+  const selecionarProduto = (indice) => {
+    setObjProduto(produtos[indice]);
+    setBtnCadastrar(false);
+  }
 
 
   // Retorno
   return (
     <div>
       <Formulario botao={btnCadastrar} eventoTeclado={aoDigitar} cadastrar={cadastrar} obj={objProduto} />
-      <Tabela vetor={produtos} />
+      <Tabela vetor={produtos} selecionar={selecionarProduto} />
     </div>
   );
 }
