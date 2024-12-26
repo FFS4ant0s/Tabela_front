@@ -65,6 +65,7 @@ function App() {
   // Limpar formulário
   const limparFormulario = () => {
     setObjProduto(produto);
+    setBtnCadastrar(true);
   }
 
   // Selecionar produto
@@ -77,7 +78,7 @@ function App() {
   // Retorno
   return (
     <div>
-      <Formulario botao={btnCadastrar} eventoTeclado={aoDigitar} cadastrar={cadastrar} obj={objProduto} />
+      <Formulario botao={btnCadastrar} eventoTeclado={aoDigitar} cadastrar={cadastrar} obj={objProduto} cancelar={limparFormulario} />
       <Tabela vetor={produtos} selecionar={selecionarProduto} />
     </div>
   );
