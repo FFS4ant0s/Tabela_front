@@ -62,6 +62,52 @@ function App() {
       });
   };
 
+
+  // Remover produto
+  const remover = () => {
+    // Verifica se todos os campos obrigatórios estão preenchidos
+    if (!objProduto.nome || !objProduto.marca) {
+      alert('Por favor, preencha todos os campos!');
+      return; // Não faz a requisição se algum campo estiver vazio
+    }
+
+    fetch('http://localhost:8080/remover/' + objProduto.codigo, {
+      method: 'delete',
+      headers: {
+        'Content-type': 'application/json',
+        'Accept': 'application/json',
+      },
+    })
+      .then((retorno) => retorno.json())
+      .then((retorno_convertido) => {
+
+        // Mensagem
+        alert(retorno_convertido.mensagem);
+
+        // Cópia do vetor de produtos
+        let vetorTemp = [...produtos];
+
+        // Indice 
+        let indice = vetorTemp.findIndex((p) => {
+          return p.codigo === objProduto.codigo;
+        });
+
+        // Remover produto do vetorTemp
+        vetorTemp.splice(indice, 1);
+
+        // Atualizar o vegor de produtos
+        setProdutos(vetorTemp);
+
+        // Limpar formulário
+        limparFormulario();
+
+      })
+      .catch((error) => {
+        console.error('Erro ao remover produto:', error);
+        alert('Houve um erro ao remover o produto.');
+      });
+  };
+
   // Limpar formulário
   const limparFormulario = () => {
     setObjProduto(produto);
@@ -78,7 +124,7 @@ function App() {
   // Retorno
   return (
     <div>
-      <Formulario botao={btnCadastrar} eventoTeclado={aoDigitar} cadastrar={cadastrar} obj={objProduto} cancelar={limparFormulario} />
+      <Formulario botao={btnCadastrar} eventoTeclado={aoDigitar} cadastrar={cadastrar} obj={objProduto} remover={remover} />
       <Tabela vetor={produtos} selecionar={selecionarProduto} />
     </div>
   );
