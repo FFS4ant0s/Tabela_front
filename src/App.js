@@ -62,6 +62,56 @@ function App() {
       });
   };
 
+  // Alterar produto
+  const alterar = () => {
+    // Verifica se todos os campos obrigatórios estão preenchidos
+    if (!objProduto.nome || !objProduto.marca) {
+      alert('Por favor, preencha todos os campos!');
+      return; // Não faz a requisição se algum campo estiver vazio
+    }
+
+    fetch('http://localhost:8080/alterar', {
+      method: 'put',
+      body: JSON.stringify(objProduto),
+      headers: {
+        'Content-type': 'application/json',
+        'Accept': 'application/json',
+      },
+    })
+      .then((retorno) => retorno.json())
+      .then((retorno_convertido) => {
+        // Verifica se a resposta contém uma mensagem de erro
+        if (retorno_convertido.mensagem) {
+          alert(retorno_convertido.mensagem);
+        } else {
+          // Mensagem 
+          alert('Produto alterado com sucesso!');
+
+
+          // Cópia do vetor de produtos
+          let vetorTemp = [...produtos];
+
+          // Indice 
+          let indice = vetorTemp.findIndex((p) => {
+            return p.codigo === objProduto.codigo;
+          });
+
+          // Atualizar produto do vetorTemp
+          vetorTemp[indice] = objProduto;
+
+          // Atualizar o vegor de produtos
+          setProdutos(vetorTemp);
+
+          //Limpar Formulario
+          limparFormulario()
+        }
+      })
+      .catch((error) => {
+        console.error('Erro ao alterar produto:', error);
+        alert('Houve um erro ao alterar o produto.');
+      });
+  };
+
 
   // Remover produto
   const remover = () => {
@@ -124,7 +174,7 @@ function App() {
   // Retorno
   return (
     <div>
-      <Formulario botao={btnCadastrar} eventoTeclado={aoDigitar} cadastrar={cadastrar} obj={objProduto} remover={remover} />
+      <Formulario botao={btnCadastrar} eventoTeclado={aoDigitar} cadastrar={cadastrar} obj={objProduto} remover={remover} alterar={alterar} cancelar={cancelar} />
       <Tabela vetor={produtos} selecionar={selecionarProduto} />
     </div>
   );
